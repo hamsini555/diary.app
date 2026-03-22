@@ -1,7 +1,7 @@
 body {
   font-family: Arial;
   text-align: center;
-  background: #ffeef5;
+  background: #c788e4;
 }
 
 .moods button {
@@ -29,7 +29,7 @@ textarea {
 }
 
 .card {
-  background: white;
+  background: rgb(245, 240, 244);
   width: 60%;
   margin: 10px auto;
   padding: 10px;
