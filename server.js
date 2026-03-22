@@ -4,7 +4,7 @@ const cors = require('cors');
 const { supabase, initializeDatabase } = require('./database');
 
 const app = express();
-const PORT = 3000;
+const PORT = process.env.PORT || 3000;
 
 app.use(bodyParser.json());
 app.use(cors());
@@ -19,7 +19,7 @@ app.post('/api/save-entry', async (req, res) => {
 
   try {
     const { data, error } = await supabase
-      .from('entrie')
+      .from('entries')
       .insert([{ title, content, mood, datetime, password }])
       .select();
 
@@ -33,7 +33,7 @@ app.post('/api/save-entry', async (req, res) => {
   }
 });
 
-app.post('/api/get-entries', async (req, res) => {
+app.post('/api/get-entriess', async (req, res) => {
   const { password } = req.body;
 
   if (!password) {
@@ -46,7 +46,7 @@ app.post('/api/get-entries', async (req, res) => {
 
   try {
     const { data, error } = await supabase
-      .from('entrie')
+      .from('entries')
       .select('id, title, content, mood, datetime')
       .order('created_at', { ascending: false });
 
@@ -54,7 +54,7 @@ app.post('/api/get-entries', async (req, res) => {
       return res.status(500).json({ error: 'Database error: ' + error.message });
     }
 
-    res.json({ success: true, entries: data || [] });
+    res.json({ success: true, entriess: data || [] });
   } catch (err) {
     res.status(500).json({ error: 'Server error' });
   }
@@ -70,7 +70,7 @@ app.delete('/api/delete-entry/:id', async (req, res) => {
 
   try {
     const { error } = await supabase
-      .from('entrie')
+      .from('entries')
       .delete()
       .eq('id', id);
 
@@ -94,7 +94,7 @@ app.put('/api/update-entry/:id', async (req, res) => {
 
   try {
     const { error } = await supabase
-      .from('entrie')
+      .from('entries')
       .update({ title, content, mood, datetime: new Date().toLocaleString() })
       .eq('id', id);
 
