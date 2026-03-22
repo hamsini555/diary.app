@@ -17,6 +17,10 @@ app.post('/api/save-entry', async (req, res) => {
     return res.status(400).json({ error: 'Missing required fields' });
   }
 
+  if (!supabase) {
+    return res.status(503).json({ error: 'Database not configured. Set SUPABASE_URL and SUPABASE_ANON_KEY environment variables.' });
+  }
+
   try {
     const { data, error } = await supabase
       .from('entries')
@@ -33,7 +37,7 @@ app.post('/api/save-entry', async (req, res) => {
   }
 });
 
-app.post('/api/get-entriess', async (req, res) => {
+app.post('/api/get-entries', async (req, res) => {
   const { password } = req.body;
 
   if (!password) {
@@ -42,6 +46,10 @@ app.post('/api/get-entriess', async (req, res) => {
 
   if (password !== '1234') {
     return res.status(401).json({ error: 'Wrong password!' });
+  }
+
+  if (!supabase) {
+    return res.status(503).json({ error: 'Database not configured. Set SUPABASE_URL and SUPABASE_ANON_KEY environment variables.' });
   }
 
   try {
@@ -54,7 +62,7 @@ app.post('/api/get-entriess', async (req, res) => {
       return res.status(500).json({ error: 'Database error: ' + error.message });
     }
 
-    res.json({ success: true, entriess: data || [] });
+    res.json({ success: true, entries: data || [] });
   } catch (err) {
     res.status(500).json({ error: 'Server error' });
   }
@@ -66,6 +74,10 @@ app.delete('/api/delete-entry/:id', async (req, res) => {
 
   if (password !== '1234') {
     return res.status(401).json({ error: 'Wrong password!' });
+  }
+
+  if (!supabase) {
+    return res.status(503).json({ error: 'Database not configured. Set SUPABASE_URL and SUPABASE_ANON_KEY environment variables.' });
   }
 
   try {
@@ -90,6 +102,10 @@ app.put('/api/update-entry/:id', async (req, res) => {
 
   if (password !== '1234') {
     return res.status(401).json({ error: 'Wrong password!' });
+  }
+
+  if (!supabase) {
+    return res.status(503).json({ error: 'Database not configured. Set SUPABASE_URL and SUPABASE_ANON_KEY environment variables.' });
   }
 
   try {

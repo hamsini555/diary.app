@@ -4,15 +4,21 @@ const { createClient } = require('@supabase/supabase-js');
 const supabaseUrl = process.env.SUPABASE_URL;
 const supabaseKey = process.env.SUPABASE_ANON_KEY;
 
-if (!supabaseUrl || !supabaseKey) {
-  console.error('Error: SUPABASE_URL and SUPABASE_ANON_KEY are required in .env file');
-  process.exit(1);
-}
+let supabase = null;
 
-const supabase = createClient(supabaseUrl, supabaseKey);
+if (!supabaseUrl || !supabaseKey) {
+  console.warn('⚠️ SUPABASE_URL or SUPABASE_ANON_KEY not found in environment');
+  console.warn('📝 API endpoints will return errors until variables are set');
+} else {
+  supabase = createClient(supabaseUrl, supabaseKey);
+}
 
 // Initialize and test connection
 const initializeDatabase = async () => {
+  if (!supabase) {
+    console.warn('⚠️ Skipping database initialization: credentials not configured');
+    return false;
+  }
   try {
     await supabase.auth.getSession();
     console.log('✅ Connected to Supabase database');
