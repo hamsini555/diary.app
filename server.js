@@ -108,19 +108,16 @@ app.put('/api/update-entry/:id', async (req, res) => {
   }
 });
 
-// Initialize database and start server
-initializeDatabase().then((connected) => {
-  if (connected) {
-    app.listen(PORT, () => {
-      console.log(`🌷 Dairy App running on http://localhost:${PORT}`);
-      console.log('Using Supabase database');
-      console.log('Press Ctrl+C to stop');
-    });
-  } else {
-    console.error('Failed to connect to database. Server not started.');
-    process.exit(1);
-  }
-}).catch((err) => {
-  console.error('Fatal error:', err);
-  process.exit(1);
+// Start server
+app.listen(PORT, () => {
+  console.log("Server running on port " + PORT);
+  initializeDatabase().then((connected) => {
+    if (connected) {
+      console.log('✅ Connected to Supabase database');
+    } else {
+      console.error('⚠️ Database connection failed, but server is running');
+    }
+  }).catch((err) => {
+    console.error('Database error:', err);
+  });
 });
